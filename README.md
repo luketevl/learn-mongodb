@@ -20,9 +20,13 @@ mongod
 ```shell
 mongod --db-path DIR
 ```
-- *Execute** the **client** in _/bin_
+- **Execute** the **client** in _/bin_
 ```shell
 mongo
+```
+- **IMPORT** to **COLLECTION**
+```shell
+mongoimport -c collectionName --jsonArray < file
 ```
 
 ## COLLECTIONS
@@ -50,7 +54,6 @@ db.collectionName.findOne(
   {"field": "value"}
   ) // AND
 ```
-
 - **DELETE** _object_
 ```mongo
 db.collectionName.remove(paramSearch)
@@ -66,9 +69,32 @@ db.collectionName.update({_id: ObjectId("4892374893274283974392874298")})
 db.collectionName.update(paramSearch, paramDataUpdate, {multi: true})
 db.collectionName.update({_id: ObjectId("4892374893274283974392874298")}, {field: value}, {multi: true})
 ```
-
-
-
+- **SEARCH PROXIMITY** | location. Is necessary **create index**
+```mongo
+db.collectionName.aggregate([{
+  $geoNear: {
+    near: {
+      coordinates: [],
+      type: "Point"
+    },
+    spherical: true,
+    distanceField: "fieldReturnValueCalc",
+    num: number
+  }
+  }, { $skip: 1 }])
+```
+- **CREATE INDEX** | Used for **aggregate**
+```mongo
+db.collectionName.createIndex({ field: "2dsphere"})
+```
+- **SHOW INDEX**
+```mongo
+db.collectionName.getIndexes()
+```
+- **DROP INDEX**
+```mongo
+db.collectionName.dropIndex({ indexName: 'value'})
+```
 
 ## OPERATORS
 - **$or** | _Clause_ **where** with **or**
@@ -155,4 +181,6 @@ export PATH=$PATH:DIR_MONGOD
 - Your **estructure** is **DINAMIC**
 _ **VERY** _used_ in **Search for proximity**
 - **DEFAULT** **FIND**
-- **COLLECTION UPDATE** | **DANGER** this _function_ replace **ALL object**, for update especific _field_ use operator **$set**
+- **COLLECTION UPDATE** | **DANGER** this _function_ replace **ALL object**, for update specific _field_ use operator **$set**
+- **3D MAP** | {type:Point, coordinates: []}
+- **INDEX** are **CASE-SENSITIVE**
